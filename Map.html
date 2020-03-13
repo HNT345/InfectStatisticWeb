@@ -11,7 +11,6 @@
 
 </head>
 
-
 <style>
     .container 
     {
@@ -34,7 +33,7 @@
         margin: 0 auto;
         background-color:rgba(255, 235, 205, 0.322);
     }
-    
+
     footer
     {
         color:gray;
@@ -57,7 +56,7 @@
         var option = {
                     title : {
                         text: '中国某疫情统计地图',
-                        subtext: '数据来自网络，点击省份可以查看详情',
+                        subtext: '',
                         x:'center'
                     },
                     tooltip : {
@@ -161,19 +160,24 @@
 
                         //使用指定的配置项和数据显示图表
                         myChart.setOption({
-                        series: [
-                            {
-                            name: '现有确诊数',
-                            type: 'map',
-                            mapType: 'china',
-                            roam: false,
-                            label: {
-                                show: true,
-                                color: 'rgb(249, 249, 249)'
+                            title: {
+                                text: '全国某疫情人数情况一览',
+                                subtext: '数据来自网络'+' '+'更新时间为'+res.lastUpdateTime,
+                                x:'center'
                             },
-                            data: newArr
-                            }
-                        ]
+                            series: [
+                                {
+                                name: '现有确诊数',
+                                type: 'map',
+                                mapType: 'china',
+                                roam: false,
+                                label: {
+                                    show: true,
+                                    color: 'rgb(249, 249, 249)'
+                                },
+                                data: newArr
+                                }
+                            ]
                         });
                     }
                 }
