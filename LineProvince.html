@@ -5,9 +5,67 @@
     <title>某省份疫情折线图</title>
 	<script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
 </head>
+
+<style>
+
+    #main
+    {
+        width: 800px;
+        height: 500px;
+        margin: 0 auto;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    td
+    {
+        text-align:center;
+        height:30px;
+        font-size: 20px;
+        width:100px;
+        font-weight:bold;
+    }
+
+    footer
+    {
+        color:gray;
+        font-size:10px;
+        text-align:center;
+    }
+
+    #backClick
+    { 
+        height:40px;
+        text-align: center;
+    }
+
+    #backClick a
+    {
+        text-decoration:none;
+        background:#325b91;
+        color:#f2f2f2;
+        
+        padding: 10px 30px 10px 30px;
+        font-size:16px;
+        font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+        font-weight:bold;
+        border-radius:3px;
+        
+        -webkit-transition:all linear 0.30s;
+        -moz-transition:all linear 0.30s;
+        transition:all linear 0.30s;
+    }
+
+    #backClick a:hover 
+    { 
+        background:#698fcc; 
+    }
+</style>
+
+
 <body>
 
-    <div id="main" style="height:500px"></div>
+    <div id="main"></div>
+
     <script type="text/javascript">
 
         var myChart = echarts.init(document.getElementById('main'));
@@ -97,52 +155,6 @@
         
     </script>
 
-
-    <style>
-        td
-        {
-            text-align:center;
-            height:30px;
-            font-size: 20px;
-            width:100px;
-            font-weight:bold;
-        }
-
-        footer
-        {
-            color:gray;
-            font-size:10px;
-            text-align:center;
-        }
-
-        #backClick
-        { 
-            height:40px;
-            text-align: center;
-        }
-
-        #backClick a
-        {
-            text-decoration:none;
-            background:#325b91;
-            color:#f2f2f2;
-            
-            padding: 10px 30px 10px 30px;
-            font-size:16px;
-            font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
-            font-weight:bold;
-            border-radius:3px;
-            
-            -webkit-transition:all linear 0.30s;
-            -moz-transition:all linear 0.30s;
-            transition:all linear 0.30s;
-        }
-
-        #backClick a:hover 
-        { 
-            background:#698fcc; 
-        }
-    </style>
 
     <table align="center">
         <tr>
