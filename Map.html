@@ -9,6 +9,90 @@
     <!--引入中国的地图数据js文件-->
     <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>
 
+    <div id=div1>
+        <div id=div2></div>
+        <div id=div2>
+          <div>累计确诊</div>
+          <div id=confirm class="number"></div>
+          <div>较上日<span id=confirmChange></span></div>
+        </div>
+        <div id=div2>
+          <div>累计治愈</div>
+          <div id=heal class="number"></div>
+          <div>较上日<span id=healChange></span></div>
+        </div>
+        <div id=div2>
+          <div>累计死亡</div>
+          <div id=dead class="number"></div>
+          <div>较上日<span id=deadChange></span></div>
+        </div>
+        <div id=div2>
+          <div>现有确诊</div>
+          <div id=nowConfirm class="number"></div>
+          <div>较上日<span id=nowConfirmChange></span></div>
+        </div>
+        <div id=div2>
+          <div>现有疑似</div>
+          <div id=suspect class="number"></div>
+          <div>较上日<span id=suspectChange></span></div>
+        </div>
+        <div id=div2>
+          <div>现有重症</div>
+          <div id=nowSevere class="number"></div>
+          <div>较上日<span id=nowSevereChange></span></div>
+        </div>
+        <div id=div2></div>
+    </div>
+    
+    <script>
+    $.ajax({
+            url : "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+            dataType : "jsonp",
+            success : function(data) { 
+            var res = data.data || "";
+            res = JSON.parse(res);
+            var confirmChange = "";
+            var confirm = "";
+            var healChange = "";
+            var heal = "";
+            var deadChange = "";
+            var dead = "";
+            var nowConfirmChange = "";
+            var nowConfirm = "";
+            var SuspectChange = "";
+            var Suspect = "";
+            var nowSevereChange = "";
+            var nowSevere = "";
+                           
+            if(res){
+                confirmChange = res.chinaAdd.confirm;
+                confirm =res.chinaTotal.confirm;
+                healChange = res.chinaAdd.heal;
+                heal =res.chinaTotal.heal;
+                deadChange = res.chinaAdd.dead;
+                dead =res.chinaTotal.dead;
+                nowConfirmChange = res.chinaAdd.nowConfirm;
+                nowConfirm =res.chinaTotal.nowConfirm;
+                suspectChange = res.chinaAdd.suspect;
+                suspect =res.chinaTotal.suspect;
+                nowSevereChange = res.chinaAdd.nowSevere;
+                nowSevere =res.chinaTotal.nowSevere;
+            }
+            $("#confirmChange").html(confirmChange);
+            $("#confirm").html(confirm);
+            $("#healChange").html(healChange);
+            $("#heal").html(heal);
+            $("#deadChange").html(deadChange);
+            $("#dead").html(dead);
+            $("#nowConfirmChange").html(nowConfirmChange);
+            $("#nowConfirm").html(nowConfirm);
+            $("#suspectChange").html(suspectChange);
+            $("#suspect").html(suspect);
+            $("#nowSevereChange").html(nowSevereChange);
+            $("#nowSevere").html(nowSevere);
+            },
+        })
+    </script>
 </head>
 
 <style>
@@ -18,9 +102,14 @@
         margin: 0 auto;
     }
 
+    .number
+    {
+        color:brown;
+    }
+
     #echartsMainMap
     {
-        width: 800px;
+        width: 900px;
         height: 500px;
         margin: 0 auto;
         background-color:rgba(255, 235, 205, 0.322);
@@ -28,7 +117,7 @@
 
     #echartsMainLine
     {
-        width: 800px;
+        width: 900px;
         height: 500px;
         margin: 0 auto;
         background-color:rgba(255, 235, 205, 0.322);
@@ -39,6 +128,24 @@
         color:gray;
         font-size:10px;
         text-align:center;
+    }
+
+    #div1
+    {
+        width:900px;
+        margin:0 auto;
+        height:100px;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    #div2
+    {
+        float:left;
+        margin:0 auto;
+        width:150px;
+        text-align:center;
+        font-size: 17px;
+        font-weight:bold;
     }
 </style>
 
@@ -225,7 +332,7 @@
                     },
                     yAxis: {
                         type: 'category',
-                        data: ['累计确诊', '现有确诊','今日确诊','现有疑似','现有重症', '累计死亡', '累计治愈']
+                        data: ['今日确诊','现有重症','现有疑似','现有确诊','累计死亡','累计治愈','累计确诊' ]
                     },
                     series: [
                         {
@@ -259,13 +366,13 @@
                             name:'人数',
                             type:'bar',
                             data:[
-                                res.chinaTotal.confirm, 
-                                res.chinaTotal.nowConfirm,
                                 res.areaTree[0].today.confirm, 
-                                res.chinaTotal.suspect,
                                 res.chinaTotal.nowSevere,
-                                res.areaTree[0].total.dead, 
-                                res.areaTree[0].total.heal
+                                res.chinaTotal.suspect,
+                                res.chinaTotal.nowConfirm,
+                                res.areaTree[0].total.dead,
+                                res.areaTree[0].total.heal,
+                                res.chinaTotal.confirm,
                             ]
                         }
                         ]
