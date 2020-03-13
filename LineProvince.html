@@ -7,6 +7,7 @@
 </head>
 
 <style>
+    body{text-align:center}
 
     #main
     {
@@ -58,6 +59,24 @@
     #backClick a:hover 
     { 
         background:#698fcc; 
+    }
+
+    #div1
+    {
+        width:800px;
+        margin:0 auto;
+        height:100px;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    #div2
+    {
+        float:left;
+        margin:0 auto;
+        width:150px;
+        text-align:center;
+        font-size: 17px;
+        font-weight:bold;
     }
 </style>
 
@@ -156,20 +175,52 @@
     </script>
 
 
-    <table align="center">
-        <tr>
-            <td>现有确诊</td>
-            <td>累计确诊</td>
-            <td>累计治愈</td>
-            <td>累计死亡</td>
-        </tr>
-        <tr>
-            <td><font color="red" face="verdana">233</font></td>
-            <td><font color="green" face="verdana">233</font></td>
-            <td><font color="purple" face="verdana">233</font></td>
-            <td><font color="orange" face="verdana">233</font></td>
-        </tr>
-    </table>
+    <div id=div1>
+        <div id=div2></div>
+        <div id=div2>
+            <div>现有确诊</div>
+            <div id=newConfirm class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计确诊</div>
+            <div id=confirm class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计治愈</div>
+            <div id=heal class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计死亡</div>
+            <div id=dead class="number"></div>
+        </div>
+        <div id=div2></div>
+    </div>
+
+    <script>
+        $.ajax({
+            url : "https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=广西",
+            dataType : "jsonp",
+            success : function(data) { 
+            var res = data.data || "";
+            res = JSON.parse(res);
+            var newConfirm = "";
+            var confirm = "";
+            var heal = "";
+            var dead = "";
+            var index = res.length;
+            if(res){
+                newConfirm = res[index-1].newConfirm;
+                confirm = res[index-1].confirm;
+                heal = res[index-1].heal;
+                dead = res[index-1].dead;
+            }
+            $("#newConfirm").html(newConfirm);
+            $("#confirm").html(confirm);
+            $("#heal").html(heal);
+            $("#dead").html(dead);
+            },
+        })
+    </script>
 
     <br/>
 
