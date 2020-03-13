@@ -57,7 +57,7 @@
         var option = {
                     title : {
                         text: '中国某疫情统计地图',
-                        subtext: '点击省份可以查看详情',
+                        subtext: '数据来自网络，点击省份可以查看详情',
                         x:'center'
                     },
                     tooltip : {
@@ -126,58 +126,58 @@
 
         //获取数据
         function getData() {
-        $.ajax({
-            url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
-            dataType: "jsonp",
-            success: function (data) 
-            {
-                //  console.log(data.data)
-                var res = data.data || "";
-                res = JSON.parse(res);
-                var newArr = [];
-
-                //newArr的数据格式为：
-                // [{
-                //   name: '北京',
-                //   value: 212
-                // }, {
-                //   name: '天津',
-                //   value: 60
-                // }]
-
-                if (res) 
+            $.ajax({
+                url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+                dataType: "jsonp",
+                success: function (data) 
                 {
-                    //获取到各个省份的数据
-                    var province = res.areaTree[0].children;
-                    for (var i = 0; i < province.length; i++) {
-                    var json = {
-                        name: province[i].name,
-                        value: province[i].total.confirm-province[i].total.dead-province[i].total.heal-province[i].total.suspect
-                    }
-                    newArr.push(json)
-                    }
-                    console.log(newArr)
-                    console.log(JSON.stringify(newArr))
+                    //  console.log(data.data)
+                    var res = data.data || "";
+                    res = JSON.parse(res);
+                    var newArr = [];
 
-                    //使用指定的配置项和数据显示图表
-                    myChart.setOption({
-                    series: [
-                        {
-                        name: '确诊数',
-                        type: 'map',
-                        mapType: 'china',
-                        roam: false,
-                        label: {
-                            show: true,
-                            color: 'rgb(249, 249, 249)'
-                        },
-                        data: newArr
+                    //newArr的数据格式为：
+                    // [{
+                    //   name: '北京',
+                    //   value: 212
+                    // }, {
+                    //   name: '天津',
+                    //   value: 60
+                    // }]
+
+                    if (res) 
+                    {
+                        //获取到各个省份的数据
+                        var province = res.areaTree[0].children;
+                        for (var i = 0; i < province.length; i++) {
+                        var json = {
+                            name: province[i].name,
+                            value: province[i].total.confirm-province[i].total.dead-province[i].total.heal-province[i].total.suspect
                         }
-                    ]
-                    });
+                        newArr.push(json)
+                        }
+                        console.log(newArr)
+                        console.log(JSON.stringify(newArr))
+
+                        //使用指定的配置项和数据显示图表
+                        myChart.setOption({
+                        series: [
+                            {
+                            name: '确诊数',
+                            type: 'map',
+                            mapType: 'china',
+                            roam: false,
+                            label: {
+                                show: true,
+                                color: 'rgb(249, 249, 249)'
+                            },
+                            data: newArr
+                            }
+                        ]
+                        });
+                    }
                 }
-            }
-        })
+            })
         }
         getData();
 
@@ -196,7 +196,7 @@
         var option = {
                     title: {
                         text: '全国某疫情人数情况一览',
-                        subtext: '数据来自网络',
+                        subtext: '',
                         x:'center'
                     },
                     tooltip: {
@@ -221,7 +221,7 @@
                     },
                     yAxis: {
                         type: 'category',
-                        data: ['累计确诊', '今日确诊', '累计死亡', '累计治愈']
+                        data: ['累计确诊', '现有确诊','今日确诊','现有疑似','现有重症', '累计死亡', '累计治愈']
                     },
                     series: [
                         {
@@ -231,38 +231,45 @@
                         }
                     ]
                 };
-    myChart2.setOption(option);
+        myChart2.setOption(option);
 
-    function getData2() {
-        $.ajax({
-            url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
-            dataType: "jsonp",
-            success: function (data) 
-            {
-
-                var res = data.data || "";
-                res = JSON.parse(res);
+        function getData2() {
+            $.ajax({
+                url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+                dataType: "jsonp",
+                success: function (data) 
+                {
+                    var res = data.data || "";
+                    res = JSON.parse(res);
 
                     //使用指定的配置项和数据显示图表
                     myChart2.setOption({
+                        title: {
+                            text: '全国某疫情人数情况一览',
+                            subtext: '数据来自网络'+' '+'更新时间为'+res.lastUpdateTime,
+                            x:'center'
+                        },
+
                         series : [
                         {
                             name:'人数',
                             type:'bar',
-                            data:[res.areaTree[0].total.confirm, 
-                                  res.areaTree[0].today.confirm, 
-                                  res.areaTree[0].total.dead, 
-                                  res.areaTree[0].total.heal]
+                            data:[
+                                res.chinaTotal.confirm, 
+                                res.chinaTotal.nowConfirm,
+                                res.areaTree[0].today.confirm, 
+                                res.chinaTotal.suspect,
+                                res.chinaTotal.nowSevere,
+                                res.areaTree[0].total.dead, 
+                                res.areaTree[0].total.heal
+                            ]
                         }
-                    ]
+                        ]
                     });
-            }
-            
-        })
+                }        
+            })
         }
         getData2();
-
-
 
 
 </script>
