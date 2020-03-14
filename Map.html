@@ -115,7 +115,7 @@
         background-color:rgba(255, 235, 205, 0.322);
     }
 
-    #echartsMainLine
+    #echartsMainBar
     {
         width: 900px;
         height: 500px;
@@ -153,7 +153,7 @@
     <div class="container">
         <div id="echartsMainMap"></div>
         <br/><br/><br/>
-        <div id="echartsMainLine"></div>
+        <div id="echartsMainBar"></div>
     </div>
 </body>
 
@@ -303,7 +303,7 @@
 
 
         //柱状图部分
-        var myChart2 = echarts.init(document.getElementById('echartsMainLine'));
+        var myChart2 = echarts.init(document.getElementById('echartsMainBar'));
         var option = {
                     title: {
                         text: '全国某疫情人数情况一览',
