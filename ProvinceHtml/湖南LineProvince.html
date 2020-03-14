@@ -221,7 +221,7 @@
             var dead = "";
             if(res){
                 var index = res.length;
-                newConfirm = res[index-1].newConfirm;
+                newConfirm = (res[index-1].confirm-res[index-1].heal-res[index-1].dead);
                 confirm = res[index-1].confirm;
                 heal = res[index-1].heal;
                 dead = res[index-1].dead;
