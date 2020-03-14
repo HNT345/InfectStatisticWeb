@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>某疫情全国地图</title>
+    <script src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
+    <!-- 引入 echarts.js -->
+    <script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
+    <!--引入中国的地图数据js文件-->
+    <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>
+
+    <div id=div1>
+        <div id=div2>
+          <div>累计确诊</div>
+          <div id=confirm class="number"></div>
+          <div>较上日<span id=confirmChange></span></div>
+        </div>
+        <div id=div2>
+          <div>累计治愈</div>
+          <div id=heal class="number"></div>
+          <div>较上日<span id=healChange></span></div>
+        </div>
+        <div id=div2>
+          <div>累计死亡</div>
+          <div id=dead class="number"></div>
+          <div>较上日<span id=deadChange></span></div>
+        </div>
+        <div id=div2>
+          <div>现有确诊</div>
+          <div id=nowConfirm class="number"></div>
+          <div>较上日<span id=nowConfirmChange></span></div>
+        </div>
+        <div id=div2>
+          <div>现有疑似</div>
+          <div id=suspect class="number"></div>
+          <div>较上日<span id=suspectChange></span></div>
+        </div>
+        <div id=div2>
+          <div>现有重症</div>
+          <div id=nowSevere class="number"></div>
+          <div>较上日<span id=nowSevereChange></span></div>
+        </div>
+    </div>
+    
+    <script>
+    $.ajax({
+            url : "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+            dataType : "jsonp",
+            success : function(data) { 
+            var res = data.data || "";
+            res = JSON.parse(res);
+            var confirmChange = "";
+            var confirm = "";
+            var healChange = "";
+            var heal = "";
+            var deadChange = "";
+            var dead = "";
+            var nowConfirmChange = "";
+            var nowConfirm = "";
+            var SuspectChange = "";
+            var Suspect = "";
+            var nowSevereChange = "";
+            var nowSevere = "";
+                           
+            if(res){
+                confirmChange = res.chinaAdd.confirm;
+                confirm =res.chinaTotal.confirm;
+                healChange = res.chinaAdd.heal;
+                heal =res.chinaTotal.heal;
+                deadChange = res.chinaAdd.dead;
+                dead =res.chinaTotal.dead;
+                nowConfirmChange = res.chinaAdd.nowConfirm;
+                nowConfirm =res.chinaTotal.nowConfirm;
+                suspectChange = res.chinaAdd.suspect;
+                suspect =res.chinaTotal.suspect;
+                nowSevereChange = res.chinaAdd.nowSevere;
+                nowSevere =res.chinaTotal.nowSevere;
+            }
+            $("#confirmChange").html(confirmChange);
+            $("#confirm").html(confirm);
+            $("#healChange").html(healChange);
+            $("#heal").html(heal);
+            $("#deadChange").html(deadChange);
+            $("#dead").html(dead);
+            $("#nowConfirmChange").html(nowConfirmChange);
+            $("#nowConfirm").html(nowConfirm);
+            $("#suspectChange").html(suspectChange);
+            $("#suspect").html(suspect);
+            $("#nowSevereChange").html(nowSevereChange);
+            $("#nowSevere").html(nowSevere);
+            },
+        })
+    </script>
+
+</head>
+
+<style>
+    body{text-align:center} 
+    .container 
+    {
+        width: 1200px;
+        margin: 0 auto;
+    }
+
+    .number
+    {
+        color:brown;
+    }
+
+    #echartsMainMap
+    {
+        width: 900px;
+        height: 500px;
+        margin: 0 auto;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    #echartsMainBar
+    {
+        width: 900px;
+        height: 500px;
+        margin: 0 auto;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    footer
+    {
+        color:gray;
+        font-size:10px;
+        text-align:center;
+    }
+
+    #div1
+    {
+        width:900px;
+        margin:0 auto;
+        height:100px;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    #div2
+    {
+        float:left;
+        margin:0 auto;
+        width:150px;
+        text-align:center;
+        font-size: 17px;
+        font-weight:bold;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div id="echartsMainMap"></div>
+        <br/><br/><br/>
+        <div id="echartsMainBar"></div>
+    </div>
+</body>
+
+<script>
+        //地图部分
+        var myChart = echarts.init(document.getElementById("echartsMainMap"));
+        var option = {
+                    title : {
+                        text: '中国某疫情统计地图',
+                        subtext: '',
+                        x:'center'
+                    },
+                    tooltip : {
+                        trigger: 'item'
+                    },
+                    legend : {
+                        orient: 'vertical',
+                        x:'left',
+                        data:['确诊人数']
+                    },
+                    dataRange : {
+                        x: 'left',
+                        y: 'bottom',
+                        splitList: [
+                            {start: 200,color:'RGB(134,1,26)'},
+                            {start: 100, end: 200,color:'RGB(224,46,79)'},
+                            {start: 30, end: 100,color:'RGB(224,91,115)'},
+                            {start: 20, end: 30,color:'RGB(224,113,134)'},
+                            {start: 10, end: 20,color:'RGB(224,157,170)'},
+                            {start: 5, end: 10,color:'RGB(224,180,188)'},
+                            {end: 5,color:'RGB(224,224,224)'}
+                        ],                
+                    },
+                    toolbox : {
+                        show: true,
+                        orient: 'vertical',
+                        x: 'right',
+                        y: 'center',
+                        feature: {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            restore : {show: true},
+                            saveAsImage : {show: false}
+                        }
+                    },
+                    roamController : {
+                        show: false,
+                        x: 'right',
+                        mapTypeControl: {
+                            'china': true
+                        }
+                    },
+                    series : [
+                        {
+                            name: '确诊人数',
+                            type: 'map',
+                            mapType: 'china',
+                            roam: false,
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:true,
+                                        textStyle: {
+                                        color: "rgb(249, 249, 249)"
+                                        }
+                                    }
+                                },
+                                emphasis:{label:{show:true}}
+                            },
+                            data:[]
+                        }
+                    ]
+                };
+
+        myChart.setOption(option);
+
+        //获取数据
+        function getData() {
+            $.ajax({
+                url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+                dataType: "jsonp",
+                success: function (data) 
+                {
+                    //  console.log(data.data)
+                    var res = data.data || "";
+                    res = JSON.parse(res);
+                    var newArr = [];
+
+                    //newArr的数据格式为：
+                    // [{
+                    //   name: '北京',
+                    //   value: 212
+                    // }, {
+                    //   name: '天津',
+                    //   value: 60
+                    // }]
+
+                    if (res) 
+                    {
+                        //获取到各个省份的数据
+                        var province = res.areaTree[0].children;
+                        for (var i = 0; i < province.length; i++) {
+                        var json = {
+                            name: province[i].name,
+                            value: province[i].total.confirm-province[i].total.dead-province[i].total.heal-province[i].total.suspect
+                        }
+                        newArr.push(json)
+                        }
+                        console.log(newArr)
+                        console.log(JSON.stringify(newArr))
+
+                        //使用指定的配置项和数据显示图表
+                        myChart.setOption({
+                            title: {
+                                text: '全国某疫情人数情况一览',
+                                subtext: '数据来自网络'+' '+'更新时间为'+res.lastUpdateTime,
+                                x:'center'
+                            },
+                            series: [
+                                {
+                                name: '现有确诊数',
+                                type: 'map',
+                                mapType: 'china',
+                                roam: false,
+                                label: {
+                                    show: true,
+                                    color: 'rgb(249, 249, 249)'
+                                },
+                                data: newArr
+                                }
+                            ]
+                        });
+                    }
+                }
+            })
+        }
+        getData();
+
+        myChart.on('click', function(params)
+        {
+            console.log(params); 
+            var name = params.name;
+            window.location.href='./ProvinceHtml/'+name+'LineProvince.html';
+        });
+
+
+
+
+        //柱状图部分
+        var myChart2 = echarts.init(document.getElementById('echartsMainBar'));
+        var option = {
+                    title: {
+                        text: '全国某疫情人数情况一览',
+                        subtext: '',
+                        x:'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    legend: {
+                        x:'right',
+                        data: ['人数']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'value',
+                        boundaryGap: [0, 0.01]
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: ['今日确诊','现有重症','现有疑似','现有确诊','累计死亡','累计治愈','累计确诊' ]
+                    },
+                    series: [
+                        {
+                            name: '人数',
+                            type: 'bar',
+                            data: []
+                        }
+                    ]
+                };
+        myChart2.setOption(option);
+
+        function getData2() {
+            $.ajax({
+                url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+                dataType: "jsonp",
+                success: function (data) 
+                {
+                    var res = data.data || "";
+                    res = JSON.parse(res);
+
+                    //使用指定的配置项和数据显示图表
+                    myChart2.setOption({
+                        title: {
+                            text: '全国某疫情人数情况一览',
+                            subtext: '数据来自网络'+' '+'更新时间为'+res.lastUpdateTime,
+                            x:'center'
+                        },
+
+                        series : [
+                        {
+                            name:'人数',
+                            type:'bar',
+                            data:[
+                                res.areaTree[0].today.confirm, 
+                                res.chinaTotal.nowSevere,
+                                res.chinaTotal.suspect,
+                                res.chinaTotal.nowConfirm,
+                                res.areaTree[0].total.dead,
+                                res.areaTree[0].total.heal,
+                                res.chinaTotal.confirm,
+                            ]
+                        }
+                        ]
+                    });
+                }        
+            })
+        }
+        getData2();
+
+
+</script>
+
+<br/><br/><br/>
+
+<footer>
+    Copyright@221701201 221701202.All Rights Reserved.
+</footer>
+
+</html>

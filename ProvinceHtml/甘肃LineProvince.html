@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>甘肃某疫情折线图</title>
+    <script src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
+	<script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
+</head>
+
+<style>
+    body
+    {
+        text-align:center;
+    }
+
+    .number
+    {
+        color:brown;
+    }
+
+    #main
+    {
+        width: 800px;
+        height: 500px;
+        margin: 0 auto;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    footer
+    {
+        color:gray;
+        font-size:10px;
+        text-align:center;
+    }
+
+    #backClick
+    { 
+        height:40px;
+        text-align: center;
+    }
+
+    #backClick a
+    {
+        text-decoration:none;
+        background:#325b91;
+        color:#f2f2f2;
+        
+        padding: 10px 30px 10px 30px;
+        font-size:16px;
+        font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+        font-weight:bold;
+        border-radius:3px;
+        
+        -webkit-transition:all linear 0.30s;
+        -moz-transition:all linear 0.30s;
+        transition:all linear 0.30s;
+    }
+
+    #backClick a:hover 
+    { 
+        background:#698fcc; 
+    }
+
+    #div1
+    {
+        width:800px;
+        margin:0 auto;
+        height:60px;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    #div2
+    {
+        float:left;
+        margin:0 auto;
+        width:200px;
+        text-align:center;
+        font-size: 17px;
+        font-weight:bold;
+    }
+</style>
+
+
+<body>
+
+    <div id="main"></div>
+
+    <script type="text/javascript">
+
+        var myChart = echarts.init(document.getElementById('main'));
+ 
+        var option = {
+                title : {
+                    text: '甘肃某疫情人数折线图',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                legend: {
+                    x:'right',
+                    type: 'scroll',
+                    orient: 'vertical',
+                    data:['现有确诊','累计确诊','累计治愈','累计死亡']
+                },
+                toolbox: {
+                    orient : 'vertical',
+                    x: 'right',
+                    y: 'center',
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: false, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: false}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data : []
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        axisLabel : {
+                            formatter: '{value} 人'
+                        }
+                    }
+                ],
+                series : [
+                    {
+                        name:'现有确诊',
+                        type:'line',
+                        data:[],
+                    },
+                    {
+                        name:'累计确诊',
+                        type:'line',
+                        data:[],
+                    },
+                    {
+                        name:'累计治愈',
+                        type:'line',
+                        data:[],
+                    },
+                    {
+                        name:'累计死亡',
+                        type:'line',
+                        data:[],
+                    }
+                ]
+            };
+            $.ajax({
+                url:"https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E7%94%98%E8%82%83&",
+                dataType:"json",
+                success: function (data) {
+                    var res = data.data || "";
+                    var date = [];
+                    var newConfirm = [];
+                    var confirm = [];
+                    var heal = [];
+                    var dead = [];
+                    if (res) 
+                    {
+                        //获取到各个省份的数据
+                        for (var i = res.length-7; i < res.length; i++) {
+                            date.push(res[i].date);
+                            newConfirm.push(res[i].confirm-res[i].heal-res[i].dead);
+                            confirm.push(res[i].confirm);
+                            heal.push(res[i].heal);
+                            dead.push(res[i].dead);
+                        }
+                        option.xAxis[0].data = date;
+                        option.series[0].data = newConfirm;
+                        option.series[1].data = confirm;
+                        option.series[2].data = heal;
+                        option.series[3].data = dead;
+                        myChart.setOption(option);// 重新加载图表
+                    }
+                },
+                    error:function(){
+                        alert("数据加载失败！请检查数据链接是否正确");
+                    }
+            });
+    </script>
+
+
+    <div id=div1>
+        <div id=div2>
+            <div>现有确诊</div>
+            <div id=newConfirm class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计确诊</div>
+            <div id=confirm class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计治愈</div>
+            <div id=heal class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计死亡</div>
+            <div id=dead class="number"></div>
+        </div>
+    </div>
+
+    <script>
+        $.ajax({
+            url : "https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E7%94%98%E8%82%83&",
+            dataType : "json",
+            success : function(data) { 
+            var res = data.data || "";
+            var newConfirm = "";
+            var confirm = "";
+            var heal = "";
+            var dead = "";
+            if(res){
+                var index = res.length;
+                newConfirm = (res[index-1].confirm-res[index-1].heal-res[index-1].dead);
+                confirm = res[index-1].confirm;
+                heal = res[index-1].heal;
+                dead = res[index-1].dead;
+            }
+            $("#newConfirm").html(newConfirm);
+            $("#confirm").html(confirm);
+            $("#heal").html(heal);
+            $("#dead").html(dead);
+            },
+        })
+    </script>
+
+    <br/>
+
+    <div id="backClick">
+        <a id="btlogin" href="../Map.html">点击返回全国地图</a>
+    </div>
+
+    <footer>
+        Copyright@221701201 221701202
+    </footer>
+
+
+</body>
+</html>
