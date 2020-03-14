@@ -156,7 +156,7 @@
                 ]
             };
             $.ajax({
-                url:"https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E5%B9%BF%E8%A5%BF",
+                url:"https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E7%A6%8F%E5%BB%BA&",
                 dataType:"json",
                 success: function (data) {
                     var res = data.data || "";
@@ -170,7 +170,7 @@
                         //获取到各个省份的数据
                         for (var i = res.length-7; i < res.length; i++) {
                             date.push(res[i].date);
-                            newConfirm.push(res[i].newConfirm);
+                            newConfirm.push(res[i].confirm-res[i].heal-res[i].dead);
                             confirm.push(res[i].confirm);
                             heal.push(res[i].heal);
                             dead.push(res[i].dead);
@@ -211,7 +211,7 @@
 
     <script>
         $.ajax({
-            url : "https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E5%B9%BF%E8%A5%BF",
+            url : "https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E7%A6%8F%E5%BB%BA&",
             dataType : "json",
             success : function(data) { 
             var res = data.data || "";
