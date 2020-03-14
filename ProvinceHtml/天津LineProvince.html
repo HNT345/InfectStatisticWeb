@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>天津某疫情折线图</title>
+    <script src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
+	<script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
+</head>
+
+<style>
+    body
+    {
+        text-align:center;
+    }
+
+    .number
+    {
+        color:brown;
+    }
+
+    #main
+    {
+        width: 800px;
+        height: 500px;
+        margin: 0 auto;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    footer
+    {
+        color:gray;
+        font-size:10px;
+        text-align:center;
+    }
+
+    #backClick
+    { 
+        height:40px;
+        text-align: center;
+    }
+
+    #backClick a
+    {
+        text-decoration:none;
+        background:#325b91;
+        color:#f2f2f2;
+        
+        padding: 10px 30px 10px 30px;
+        font-size:16px;
+        font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+        font-weight:bold;
+        border-radius:3px;
+        
+        -webkit-transition:all linear 0.30s;
+        -moz-transition:all linear 0.30s;
+        transition:all linear 0.30s;
+    }
+
+    #backClick a:hover 
+    { 
+        background:#698fcc; 
+    }
+
+    #div1
+    {
+        width:800px;
+        margin:0 auto;
+        height:60px;
+        background-color:rgba(255, 235, 205, 0.322);
+    }
+
+    #div2
+    {
+        float:left;
+        margin:0 auto;
+        width:200px;
+        text-align:center;
+        font-size: 17px;
+        font-weight:bold;
+    }
+</style>
+
+
+<body>
+
+    <div id="main"></div>
+
+    <script type="text/javascript">
+
+        var myChart = echarts.init(document.getElementById('main'));
+ 
+        var option = {
+                title : {
+                    text: '天津某疫情人数折线图',
+                    subtext: '折现数据随机生成，纯属虚构',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                legend: {
+                    x:'right',
+                    data:['现有确诊','现有疑似','累计治愈']
+                },
+                toolbox: {
+                    orient : 'vertical',
+                    x: 'right',
+                    y: 'center',
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: false, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: false}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data : ['2.20','2.21','2.22','2.23','2.24','2.25','2.26']
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        axisLabel : {
+                            formatter: '{value} 人'
+                        }
+                    }
+                ],
+                series : [
+                    {
+                        name:'现有确诊',
+                        type:'line',
+                        data:[Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000)],
+                    },
+                    {
+                        name:'现有疑似',
+                        type:'line',
+                        data:[Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000)],
+                    },
+                    {
+                        name:'累计治愈',
+                        type:'line',
+                        data:[Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000), 
+                                Math.round(Math.random()*2000)],
+                    }
+                ]
+            };
+        myChart.setOption(option);        
+    </script>
+
+
+    <div id=div1>
+        <div id=div2>
+            <div>现有确诊</div>
+            <div id=newConfirm class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计确诊</div>
+            <div id=confirm class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计治愈</div>
+            <div id=heal class="number"></div>
+        </div>
+        <div id=div2>
+            <div>累计死亡</div>
+            <div id=dead class="number"></div>
+        </div>
+    </div>
+
+    <script>
+        //之前的接口
+        $.ajax({
+            url : "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+            dataType : "jsonp",
+            success : function(data) { 
+            var res = data.data || "";
+            res = JSON.parse(res);
+            var newConfirm = "";
+            var confirm = "";
+            var heal = "";
+            var dead = "";
+                           
+            if(res){
+                var province = res.areaTree[0].children;
+                for (var i = 0; i < province.length; i++) 
+                {
+                    if(province[i].name == '天津')
+                    {
+                        break;
+                    }
+                        
+                }
+                newConfirm = province[i].total.confirm-province[i].total.dead-province[i].total.heal-province[i].total.suspect;
+                confirm = province[i].total.confirm;
+                heal = province[i].total.heal;
+                dead = province[i].total.dead;
+            }
+            $("#newConfirm").html(newConfirm);
+            $("#confirm").html(confirm);
+            $("#heal").html(heal);
+            $("#dead").html(dead);
+            },
+        })
+
+    </script>
+
+    <br/>
+
+    <div id="backClick">
+        <a id="btlogin" href="../Map.html">点击返回全国地图</a>
+    </div>
+
+    <footer>
+        Copyright@221701201 221701202
+    </footer>
+
+
+</body>
+</html>
