@@ -10,7 +10,6 @@
     <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>
 
     <div id=div1>
-        <div id=div2></div>
         <div id=div2>
           <div>累计确诊</div>
           <div id=confirm class="number"></div>
@@ -41,7 +40,6 @@
           <div id=nowSevere class="number"></div>
           <div>较上日<span id=nowSevereChange></span></div>
         </div>
-        <div id=div2></div>
     </div>
     
     <script>
@@ -93,6 +91,7 @@
             },
         })
     </script>
+
 </head>
 
 <style>
@@ -297,7 +296,7 @@
         {
             console.log(params); 
             var name = params.name;
-            window.location.href='./LineProvince.html';
+            window.location.href='./ProvinceHtml/'+name+'LineProvince.html';
         });
 
 
