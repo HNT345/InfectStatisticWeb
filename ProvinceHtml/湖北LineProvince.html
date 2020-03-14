@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>湖北省某疫情折线图</title>
+    <title>湖北某疫情折线图</title>
     <script src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
 	<script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
 </head>
@@ -91,7 +91,7 @@
  
         var option = {
                 title : {
-                    text: '湖北省某疫情人数折线图',
+                    text: '湖北某疫情人数折线图',
                     subtext: '折现数据随机生成，纯属虚构',
                     x:'center'
                 },
@@ -173,7 +173,7 @@
 
     <div id=div1>
         <div id=div2>
-            <div>今日确诊</div>
+            <div>现有确诊</div>
             <div id=newConfirm class="number"></div>
         </div>
         <div id=div2>
@@ -205,11 +205,18 @@
                            
             if(res){
                 var province = res.areaTree[0].children;
-                //以湖北省为例测试
-                newConfirm = province[0].today.confirm;
-                confirm = province[0].total.confirm;
-                heal = res.areaTree[0].children[0].total.heal;
-                dead = res.areaTree[0].children[0].total.dead;
+                for (var i = 0; i < province.length; i++) 
+                {
+                    if(province[i].name == '湖北')
+                    {
+                        break;
+                    }
+                        
+                }
+                newConfirm = province[i].total.confirm-province[i].total.dead-province[i].total.heal-province[i].total.suspect;
+                confirm = province[i].total.confirm;
+                heal = province[i].total.heal;
+                dead = province[i].total.dead;
             }
             $("#newConfirm").html(newConfirm);
             $("#confirm").html(confirm);
