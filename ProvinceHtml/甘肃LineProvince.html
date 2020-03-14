@@ -92,7 +92,6 @@
         var option = {
                 title : {
                     text: '甘肃某疫情人数折线图',
-                    subtext: '折现数据随机生成，纯属虚构',
                     x:'center'
                 },
                 tooltip : {
@@ -100,7 +99,9 @@
                 },
                 legend: {
                     x:'right',
-                    data:['现有确诊','现有疑似','累计治愈']
+                    type: 'scroll',
+                    orient: 'vertical',
+                    data:['现有确诊','累计确诊','累计治愈','累计死亡']
                 },
                 toolbox: {
                     orient : 'vertical',
@@ -120,7 +121,7 @@
                     {
                         type : 'category',
                         boundaryGap : false,
-                        data : ['2.20','2.21','2.22','2.23','2.24','2.25','2.26']
+                        data : []
                     }
                 ],
                 yAxis : [
@@ -135,39 +136,57 @@
                     {
                         name:'现有确诊',
                         type:'line',
-                        data:[Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000)],
+                        data:[],
                     },
                     {
-                        name:'现有疑似',
+                        name:'累计确诊',
                         type:'line',
-                        data:[Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000)],
+                        data:[],
                     },
                     {
                         name:'累计治愈',
                         type:'line',
-                        data:[Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000), 
-                                Math.round(Math.random()*2000)],
+                        data:[],
+                    },
+                    {
+                        name:'累计死亡',
+                        type:'line',
+                        data:[],
                     }
                 ]
             };
-        myChart.setOption(option);        
+            $.ajax({
+                url:"https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E5%B9%BF%E8%A5%BF",
+                dataType:"json",
+                success: function (data) {
+                    var res = data.data || "";
+                    var date = [];
+                    var newConfirm = [];
+                    var confirm = [];
+                    var heal = [];
+                    var dead = [];
+                    if (res) 
+                    {
+                        //获取到各个省份的数据
+                        for (var i = res.length-7; i < res.length; i++) {
+                            date.push(res[i].date);
+                            newConfirm.push(res[i].newConfirm);
+                            confirm.push(res[i].confirm);
+                            heal.push(res[i].heal);
+                            dead.push(res[i].dead);
+                        }
+                        option.xAxis[0].data = date;
+                        option.series[0].data = newConfirm;
+                        option.series[1].data = confirm;
+                        option.series[2].data = heal;
+                        option.series[3].data = dead;
+                        myChart.setOption(option);// 重新加载图表
+                    }
+                },
+                    error:function(){
+                        alert("数据加载失败！请检查数据链接是否正确");
+                    }
+            });
     </script>
 
 
@@ -191,32 +210,21 @@
     </div>
 
     <script>
-        //之前的接口
         $.ajax({
-            url : "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
-            dataType : "jsonp",
+            url : "https://api.inews.qq.com/newsqa/v1/query/pubished/daily/list?province=%E5%B9%BF%E8%A5%BF",
+            dataType : "json",
             success : function(data) { 
             var res = data.data || "";
-            res = JSON.parse(res);
             var newConfirm = "";
             var confirm = "";
             var heal = "";
             var dead = "";
-                           
             if(res){
-                var province = res.areaTree[0].children;
-                for (var i = 0; i < province.length; i++) 
-                {
-                    if(province[i].name == '甘肃')
-                    {
-                        break;
-                    }
-                        
-                }
-                newConfirm = province[i].total.confirm-province[i].total.dead-province[i].total.heal-province[i].total.suspect;
-                confirm = province[i].total.confirm;
-                heal = province[i].total.heal;
-                dead = province[i].total.dead;
+                var index = res.length;
+                newConfirm = res[index-1].newConfirm;
+                confirm = res[index-1].confirm;
+                heal = res[index-1].heal;
+                dead = res[index-1].dead;
             }
             $("#newConfirm").html(newConfirm);
             $("#confirm").html(confirm);
@@ -224,7 +232,6 @@
             $("#dead").html(dead);
             },
         })
-
     </script>
 
     <br/>
